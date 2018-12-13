@@ -15,7 +15,6 @@
 
 namespace PhpLisp\Psp\Tests;
 
-use \RuntimeException;
 use ArrayObject;
 use InvalidArgumentException;
 use OutOfRangeException;
@@ -69,6 +68,7 @@ use PhpLisp\Psp\Runtime\String\StringJoin;
 use PhpLisp\Psp\Runtime\UserMacro;
 use PhpLisp\Psp\Scope;
 use PhpLisp\Psp\Symbol;
+use RuntimeException;
 use stdClass;
 use UnexpectedValueException;
 
@@ -164,21 +164,42 @@ class RuntimeTest extends TestCase
         $this->logged = $log;
     }
 
+    /**
+     *
+     */
     public function testUserMacro()
     {
         $scope = Environment::sandbox();
         $scope['log'] = new PHPFunction([$this, 'logTest']);
-        $body = self::lst('(log "testUserMacro") (PspList #scope #arguments)');
+        $body = self::lst('(log "testUserMacro") (PhpLisp\\Psp\\PspList #scope #arguments)');
         $macro = new UserMacro($scope, $body);
         $this->assertSame($scope, $macro->scope);
         $this->assertSame($body, $macro->body);
         $context = new Scope;
         $args = self::lst('a (+ a b)');
-        /*        $retval = $macro->apply($context, $args);
-                $this->assertInstanceOf('PspList', $retval);
-                $this->assertSame($context, $retval[0]);
-                $this->assertSame($args, $retval[1]);*/
+
+/*        $retval = $macro->apply($context, $args);
+        $this->assertInstanceOf('PspList', $retval);
+        $this->assertSame($context, $retval[0]);
+        $this->assertSame($args, $retval[1]);*/
     }
+
+    /*
+        public function testUserMacro()
+        {
+            $scope = Lisphp_Environment::sandbox();
+            $scope['log'] = new Lisphp_Runtime_PHPFunction(array($this, 'logTest'));
+            $body = self::lst('(log "testUserMacro") (list #scope #arguments)');
+            $macro = new Lisphp_Runtime_UserMacro($scope, $body);
+            $this->assertSame($scope, $macro->scope);
+            $this->assertEquals($body, $macro->body);
+            $context = new Lisphp_Scope;
+            $args = self::lst('a (+ a b)');
+            $retval = $macro->apply($context, $args);
+            $this->assertType('Lisphp_List', $retval);
+            $this->assertSame($context, $retval[0]);
+            $this->assertEquals($args, $retval[1]);
+        }*/
 
     public function testMacro()
     {
@@ -332,8 +353,7 @@ class RuntimeTest extends TestCase
     {
         $f = function ($a, $b) {
             return $a + $b;
-        };
-        ;
+        };;
         $val = PspFunction::call($f, [1, 2]);
         $this->assertSame(3, $val);
     }

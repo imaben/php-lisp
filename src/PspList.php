@@ -38,6 +38,7 @@ class PspList extends \ArrayObject implements Form
         if ($applicable) {
             return $function->apply($scope, $this->cdr());
         }
+
         throw new InvalidApplicationException($function, $this);
     }
 

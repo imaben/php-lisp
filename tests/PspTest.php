@@ -70,7 +70,7 @@ class ProgramTest extends TestCase
         $scope['+'] = new Addition();
         $scope['-'] = new Subtraction();
         $scope['lambda'] = new Lambda();
-        $scope['echo'] = new PspEcho($this);
+        $scope['echo'] = new PspEchoTest($this);
         $this->program->execute($scope);
         $this->assertSame($scope['+'], $scope['add']);
         $this->assertSame([9], $this->execResult);
@@ -115,7 +115,7 @@ class ProgramTest extends TestCase
     }
 }
 
-final class PspEcho extends PspFunction
+final class PspEchoTest extends PspFunction
 {
     public $test;
 

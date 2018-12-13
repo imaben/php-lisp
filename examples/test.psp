@@ -1,0 +1,2 @@
+(loop for x in '(a b c d e)
+      do (print x) )

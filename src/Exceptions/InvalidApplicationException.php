@@ -15,11 +15,14 @@
 
 namespace PhpLisp\Psp\Exceptions;
 
+use PhpLisp\Psp\ApplicableInterface;
 use PhpLisp\Psp\PspList;
 
 class InvalidApplicationException extends Exception
 {
     public $valueToApply;
+
+    private $list;
 
     public function __construct($valueToApply, PspList $list = null)
     {
@@ -29,9 +32,9 @@ class InvalidApplicationException extends Exception
             ? get_class($this->valueToApply)
             : (is_null($this->valueToApply) ? 'nil'
                 : gettype($this->valueToApply));
-        $msg = "$type cannot be applied; see Lisphp_Applicable interface";
+        $msg = "$type cannot be applied; see ".ApplicableInterface::class." interface";
         if ($list) {
-            $msg .= ': ' . $list->__toString();
+            $msg .= ': '.$list->__toString();
         }
         parent::__construct($msg);
     }
