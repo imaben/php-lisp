@@ -15,7 +15,6 @@
 namespace PhpLisp\Psp\Tests;
 
 use \BadMethodCallException;
-use \Exception;
 use PhpLisp\Psp\Exceptions\ParsingException;
 use PhpLisp\Psp\Psp;
 use PhpLisp\Psp\PspList;
@@ -71,7 +70,7 @@ class ProgramTest extends TestCase
         $scope['+'] = new Addition();
         $scope['-'] = new Subtraction();
         $scope['lambda'] = new Lambda();
-        $scope['echo'] = new ProgramTest_Echo($this);
+        $scope['echo'] = new PspEcho($this);
         $this->program->execute($scope);
         $this->assertSame($scope['+'], $scope['add']);
         $this->assertSame([9], $this->execResult);
@@ -94,22 +93,9 @@ class ProgramTest extends TestCase
         $this->assertInstanceOf(PspList::class, $this->program[0]);
         $this->assertInstanceOf(PspList::class, $this->program[1]);
         $this->assertInstanceOf(PspList::class, $this->program[2]);
-        try {
-            $this->program[0] = 1;
-            $this->fail();
-        } catch (BadMethodCallException $e) {
-            # pass.
-        } catch (Exception $e) {
-            $this->fail();
-        }
-        try {
-            unset($this->program[0]);
-            $this->fail();
-        } catch (BadMethodCallException $e) {
-            # pass.
-        } catch (Exception $e) {
-            $this->fail();
-        }
+        $this->expectException(BadMethodCallException::class);
+        $this->program[0] = 1;
+        unset($this->program[0]);
     }
 
     public function testIterator()
@@ -129,7 +115,7 @@ class ProgramTest extends TestCase
     }
 }
 
-final class ProgramTest_Echo extends PspFunction
+final class PspEcho extends PspFunction
 {
     public $test;
 

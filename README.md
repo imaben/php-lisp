@@ -10,5 +10,5 @@ php-lisp  is a Lisp dialect written in PHP
 [![Latest Stable Version](https://poser.pugx.org/php-lisp/php-lisp/v/stable)](https://packagist.org/packages/php-lisp/php-lisp)
 [![Licence](https://poser.pugx.org/php-lisp/php-lisp/license.svg)](https://packagist.org/packages/php-lisp/php-lisp)
 [![Total Downloads](https://poser.pugx.org/php-lisp/php-lisp/downloads.svg)](https://packagist.org/packages/php-lisp/php-lisp)
-
+ [![Gitter chat](https://badges.gitter.im/phplisp/Lobby.png)](https://gitter.im/phplisp/Lobby)
 
