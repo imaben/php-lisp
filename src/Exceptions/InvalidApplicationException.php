@@ -32,7 +32,7 @@ class InvalidApplicationException extends Exception
             ? get_class($this->valueToApply)
             : (is_null($this->valueToApply) ? 'nil'
                 : gettype($this->valueToApply));
-        $msg = "$type cannot be applied; see ".ApplicableInterface::class." interface";
+        $msg = "$type cannot be applied; see ".ApplicableInterface::class.' interface';
         if ($list) {
             $msg .= ': '.$list->__toString();
         }

@@ -63,6 +63,7 @@ use PhpLisp\Psp\Runtime\PspList\Fold;
 use PhpLisp\Psp\Runtime\PspList\Map;
 use PhpLisp\Psp\Runtime\PspList\SetAt;
 use PhpLisp\Psp\Runtime\PspList\UnsetAt;
+use PhpLisp\Psp\Runtime\PspUse;
 use PhpLisp\Psp\Runtime\String\Concat;
 use PhpLisp\Psp\Runtime\String\StringJoin;
 use PhpLisp\Psp\Runtime\UserMacro;
@@ -163,43 +164,6 @@ class RuntimeTest extends TestCase
     {
         $this->logged = $log;
     }
-
-    /**
-     *
-     */
-    public function testUserMacro()
-    {
-        $scope = Environment::sandbox();
-        $scope['log'] = new PHPFunction([$this, 'logTest']);
-        $body = self::lst('(log "testUserMacro") (PhpLisp\\Psp\\PspList #scope #arguments)');
-        $macro = new UserMacro($scope, $body);
-        $this->assertSame($scope, $macro->scope);
-        $this->assertSame($body, $macro->body);
-        $context = new Scope;
-        $args = self::lst('a (+ a b)');
-
-/*        $retval = $macro->apply($context, $args);
-        $this->assertInstanceOf('PspList', $retval);
-        $this->assertSame($context, $retval[0]);
-        $this->assertSame($args, $retval[1]);*/
-    }
-
-    /*
-        public function testUserMacro()
-        {
-            $scope = Lisphp_Environment::sandbox();
-            $scope['log'] = new Lisphp_Runtime_PHPFunction(array($this, 'logTest'));
-            $body = self::lst('(log "testUserMacro") (list #scope #arguments)');
-            $macro = new Lisphp_Runtime_UserMacro($scope, $body);
-            $this->assertSame($scope, $macro->scope);
-            $this->assertEquals($body, $macro->body);
-            $context = new Lisphp_Scope;
-            $args = self::lst('a (+ a b)');
-            $retval = $macro->apply($context, $args);
-            $this->assertType('Lisphp_List', $retval);
-            $this->assertSame($context, $retval[0]);
-            $this->assertEquals($args, $retval[1]);
-        }*/
 
     public function testMacro()
     {
@@ -353,7 +317,8 @@ class RuntimeTest extends TestCase
     {
         $f = function ($a, $b) {
             return $a + $b;
-        };;
+        };
+        ;
         $val = PspFunction::call($f, [1, 2]);
         $this->assertSame(3, $val);
     }
@@ -959,75 +924,76 @@ class RuntimeTest extends TestCase
         }
     }
 
-    /*  public function testUse()
-      {
-          $use = new PspUse();
-          $env = Environment::sandbox();
-          $scope = new Scope($env);
-          $values = $use->apply($scope, self::lst('array_merge
-                                                   array-slice
-                                                   [implode array->string]
-                                                   <\ArrayObject>
-                                                   <PhpLisp\\Psp\\Symbol>
-                                                   <PhpLisp\Psp\Tests\fixtures\Foo \\Bar>
-                                                   [<Scope> scope]
-                                                   +PHP_VERSION+
-                                                   +PHP_OS+'));
-          $this->assertInstanceOf('PHPFunction', $values[0]);
-          $this->assertSame('array_merge', $values[0]->callback);
-          $this->assertSame($values[0], $scope['array_merge']);
-          $this->assertNull($env['array_merge']);
-          $this->assertInstanceOf('PHPFunction', $values[1]);
-          $this->assertSame('array_slice', $values[1]->callback);
-          $this->assertSame($values[1], $scope['array-slice']);
-          $this->assertNull($env['array-slice']);
-          $this->assertInstanceOf('PHPFunction', $values[2]);
-          $this->assertSame('implode', $values[2]->callback);
-          $this->assertSame($values[2], $scope['array->string']);
-          $this->assertNull($env['implode']);
-          $this->assertInstanceOf('PHPClass', $values[3]);
-          $this->assertSame('ArrayObject', $values[3]->class->getName());
-          $this->assertSame($values[3], $scope['<ArrayObject>']);
-          $this->assertNull($env['<ArrayObject>']);
-          $this->assertInstanceOf('PHPClass', $values[4]);
-          $this->assertSame('Symbol', $values[4]->class->getName());
-          $this->assertSame($values[4], $scope['<Symbol>']);
-          $this->assertNull($env['<Symbol>']);
-          $this->assertInstanceOf('PHPClass', $values[5]);
-          $this->assertSame('Foo\\Bar', $values[5]->class->getName());
-          $this->assertSame($values[5], $scope['<Foo\\Bar>']);
-          $this->assertInstanceOf(
-              'PHPFunction',
-              $scope['<Foo\\Bar>/doSomething']
-          );
-          $this->assertSame(
-              ['Foo\\Bar', 'doSomething'],
-              $scope['<Foo\\Bar>/doSomething']->callback
-          );
-          $this->assertNull($env['<Foo\\Bar>']);
-          $this->assertInstanceOf('PHPClass', $values[6]);
-          $this->assertSame('Scope', $values[6]->class->getName());
-          $this->assertSame($values[6], $scope['scope']);
-          $this->assertNull($env['scope']);
-          $this->assertSame(PHP_VERSION, $values[7]);
-          $this->assertSame(PHP_VERSION, $scope['+PHP_VERSION+']);
-          $this->assertNull($env['+PHP_VERSION+']);
-          $this->assertSame(PHP_OS, $values[8]);
-          $this->assertSame(PHP_OS, $scope['+PHP_OS+']);
-          $this->assertNull($env['+PHP_OS+']);
-          try {
-              $use->apply($scope, self::lst('undefined-function-name'));
-              $this->fail();
-          } catch (InvalidArgumentException $e) {
-              # pass
-          }
-          try {
-              $use->apply($scope, self::lst('<UndefinedClassName>'));
-              $this->fail();
-          } catch (InvalidArgumentException $e) {
-              # pass
-          }
-      }*/
+    public function testUse()
+    {
+        $use = new PspUse();
+        $env = Environment::sandbox();
+        $scope = new Scope($env);
+        $values = $use->apply($scope, self::lst('array_merge
+                                                 array_slice
+                                                 [implode array->string]
+                                                 <ArrayObject>
+                                                 <PhpLisp\\Psp\\Symbol>
+                                                 <PhpLisp\\Psp\\Tests\\fixtures\\Foo\\Bar>
+                                                 [<PhpLisp\\Psp\\Scope> scope]
+                                                 +PHP_VERSION+
+                                                 +PHP_OS+'));
+
+        $this->assertInstanceOf(PHPFunction::class, $values[0]);
+        $this->assertSame('array_merge', $values[0]->callback);
+        $this->assertSame($values[0], $scope['array_merge']);
+        $this->assertNull($env['array_merge']);
+        $this->assertInstanceOf(PHPFunction::class, $values[1]);
+        $this->assertSame('array_slice', $values[1]->callback);
+        $this->assertSame($values[1], $scope['array_slice']);
+        $this->assertNull($env['array-slice']);
+        $this->assertInstanceOf(PHPFunction::class, $values[2]);
+        $this->assertSame('implode', $values[2]->callback);
+        $this->assertSame($values[2], $scope['array->string']);
+        $this->assertNull($env['implode']);
+        $this->assertInstanceOf(PHPClass::class, $values[3]);
+        $this->assertSame('ArrayObject', $values[3]->class->getName());
+        $this->assertSame($values[3], $scope['<ArrayObject>']);
+        $this->assertNull($env['<ArrayObject>']);
+        $this->assertInstanceOf(PHPClass::class, $values[4]);
+        $this->assertSame(Symbol::class, $values[4]->class->getName());
+        $this->assertSame($values[4], $scope['<PhpLisp\Psp\Symbol>']);
+        $this->assertNull($env['<Symbol>']);
+        $this->assertInstanceOf(PHPClass::class, $values[5]);
+        $this->assertSame('PhpLisp\Psp\Tests\fixtures\Foo\Bar', $values[5]->class->getName());
+        $this->assertSame($values[5], $scope['<PhpLisp\Psp\Tests\fixtures\Foo\Bar>']);
+        $this->assertInstanceOf(
+            PHPFunction::class,
+            $scope['<PhpLisp\Psp\Tests\fixtures\Foo\Bar>/doSomething']
+        );
+        $this->assertSame(
+            ['PhpLisp\Psp\Tests\fixtures\Foo\Bar', 'doSomething'],
+            $scope['<PhpLisp\Psp\Tests\fixtures\Foo\Bar>/doSomething']->callback
+        );
+        $this->assertNull($env['<PhpLisp\Psp\Tests\fixtures\Foo\Bar>']);
+        $this->assertInstanceOf(PHPClass::class, $values[6]);
+        $this->assertSame(Scope::class, $values[6]->class->getName());
+        $this->assertSame($values[6], $scope['scope']);
+        $this->assertNull($env['scope']);
+        $this->assertSame(PHP_VERSION, $values[7]);
+        $this->assertSame(PHP_VERSION, $scope['+PHP_VERSION+']);
+        $this->assertNull($env['+PHP_VERSION+']);
+        $this->assertSame(PHP_OS, $values[8]);
+        $this->assertSame(PHP_OS, $scope['+PHP_OS+']);
+        $this->assertNull($env['+PHP_OS+']);
+        try {
+            $use->apply($scope, self::lst('undefined-function-name'));
+            $this->fail();
+        } catch (InvalidArgumentException $e) {
+            # pass
+        }
+        try {
+            $use->apply($scope, self::lst('<UndefinedClassName>'));
+            $this->fail();
+        } catch (InvalidArgumentException $e) {
+            # pass
+        }
+    }
 
     public function testFrom()
     {

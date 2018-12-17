@@ -16,7 +16,8 @@
     "phpunit/phpunit": "^7.5",
     "codedungeon/phpunit-result-printer": "^0.23.4",
     "friendsofphp/php-cs-fixer": "^2.13",
-    "overtrue/phplint": "^1.1"
+    "overtrue/phplint": "^1.1",
+    "symfony/var-dumper": "^4.2"
   },
   "autoload": {
     "psr-4": {

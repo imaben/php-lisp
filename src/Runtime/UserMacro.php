@@ -36,6 +36,7 @@ class UserMacro implements ApplicableInterface
         $call->let('#scope', $scope);
         $call->let('#arguments', $arguments);
         foreach ($this->body as $form) {
+            /** @var  PspList $form */
             $retval = $form->evaluate($call);
         }
         if (isset($retval)) {
