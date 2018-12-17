@@ -66,12 +66,12 @@ final class Psp implements \IteratorAggregate, \ArrayAccess, \Countable
 
     public function offsetSet($_, $__)
     {
-        throw new \BadMethodCallException('Lisphp_Program object is immutable');
+        throw new \BadMethodCallException('PSP_Program object is immutable');
     }
 
     public function offsetUnset($offset)
     {
-        throw new \BadMethodCallException('Lisphp_Program object is immutable');
+        throw new \BadMethodCallException('PSP_Program object is immutable');
     }
 
     public function getIterator()

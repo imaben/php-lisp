@@ -57,9 +57,9 @@ class ProgramTest extends TestCase
             $this->fail();
         } catch (ParsingException $e) {
             $this->assertEquals(file_get_contents($f), $e->code);
-            $this->assertEquals($f, $e->getLisphpFile());
-            $this->assertEquals(2, $e->getLisphpLine());
-            $this->assertEquals(41, $e->getLisphpColumn());
+            $this->assertEquals($f, $e->getPspFile());
+            $this->assertEquals(2, $e->getPspLine());
+            $this->assertEquals(41, $e->getPspColumn());
         }
     }
 

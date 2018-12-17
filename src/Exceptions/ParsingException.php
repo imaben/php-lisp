@@ -21,25 +21,25 @@ class ParsingException extends Exception
 
     public $offset;
 
-    public $lisphpFile;
+    public $pspFile;
 
     public function __construct($code, $offset, $file = '')
     {
         $this->code = $code;
         $this->offset = $offset;
-        $this->lisphpFile = $file;
+        $this->pspFile = $file;
         $on = ($file ? "$file:" : '')
-            . $this->getLisphpLine() . ':'
-            . $this->getLisphpColumn();
+            . $this->getPspLine() . ':'
+            . $this->getPspColumn();
         $this->message = "parsing error on $on";
     }
 
-    public function getLisphpFile()
+    public function getPspFile()
     {
-        return $this->lisphpFile;
+        return $this->pspFile;
     }
 
-    public function getLisphpLine()
+    public function getPspLine()
     {
         if ($this->offset <= 0) {
             return 1;
@@ -48,7 +48,7 @@ class ParsingException extends Exception
         return substr_count($this->code, "\n", 0, $this->offset) + 1;
     }
 
-    public function getLisphpColumn()
+    public function getPspColumn()
     {
         $pos = strrpos(substr($this->code, 0, $this->offset), "\n");
 

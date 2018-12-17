@@ -34,22 +34,22 @@ class ParsingExceptionTest extends TestCase
 
     public function testLine()
     {
-        $this->assertSame(3, $this->exception->getLisphpLine());
+        $this->assertSame(3, $this->exception->getPspLine());
         $e = new ParsingException('{', 0);
-        $this->assertSame(1, $e->getLisphpLine());
+        $this->assertSame(1, $e->getPspLine());
     }
 
     public function testColumn()
     {
-        $this->assertSame(38, $this->exception->getLisphpColumn());
+        $this->assertSame(38, $this->exception->getPspColumn());
         $e = new ParsingException('{', 0);
-        $this->assertSame(1, $e->getLisphpColumn());
+        $this->assertSame(1, $e->getPspColumn());
     }
 
     public function testFile()
     {
-        $this->assertSame('test.lisphp', $this->exception->getLisphpFile());
+        $this->assertSame('test.lisphp', $this->exception->getPspFile());
         $e = new ParsingException('(echo 1', 7);
-        $this->assertSame('', $e->getLisphpFile());
+        $this->assertSame('', $e->getPspFile());
     }
 }
