@@ -152,5 +152,7 @@ final class Environment
         $scope->let('*files*', $_FILES);
         $scope->let('*cookie*', $_COOKIE);
         $scope->let('*session*', $_SESSION);
+
+        return $scope;
     }
 }

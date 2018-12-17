@@ -80,12 +80,16 @@ class EnvironmentTest extends TestCase
         $this->assertInstanceOf(PHPFunction::class, $scope['symbol']);
 
         $this->assertEquals(
-
             function () {
                 Symbol::get('');
             },
             $scope['symbol']->callback
         );
+
+        $func = $scope['symbol'];
+        $this->assertInstanceOf(PHPFunction::class, $func);
+        $this->expectException(\UnexpectedValueException::class);
+        $func->execute([]);
         $this->assertInstanceOf(Define::class, $scope['define']);
         $this->assertInstanceOf(Let::class, $scope['let']);
         $this->assertInstanceOf(Macro::class, $scope['macro']);
@@ -181,5 +185,21 @@ class EnvironmentTest extends TestCase
         $this->assertInstanceOf(From::class, $scope['from']);
         $this->assertSame($_ENV, $scope['*env*']);
         $this->assertSame($_SERVER, $scope['*server*']);
+    }
+
+    public function testWebapp()
+    {
+        if (!isset($_SESSION)) {
+            $_SESSION = [];
+        }
+        $scope = Environment::webapp();
+
+        $this->assertInstanceOf(Scope::class, $scope);
+        $this->assertSame($_GET, $scope['*get*']);
+        $this->assertSame($_POST, $scope['*post*']);
+        $this->assertSame($_REQUEST, $scope['*request*']);
+        $this->assertSame($_FILES, $scope['*files*']);
+        $this->assertSame($_COOKIE, $scope['*cookie*']);
+        $this->assertSame($_SESSION, $scope['*session*']);
     }
 }
