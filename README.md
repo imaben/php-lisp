@@ -1,5 +1,5 @@
 # PHP - lisp
-Php-lisp is a lisp interpreter written in PHP (just for fun)
+php-lisp is a lisp interpreter written in PHP (just for fun)
 
 
 
