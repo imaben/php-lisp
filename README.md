@@ -14,6 +14,8 @@ Php-lisp is a lisp interpreter written in PHP (just for fun)
 
 
 
+**[简体中文](https://github.com/php-lisp/php-lisp/blob/master/README_zh.md)**
+
 # introduction
 
 1. Unit test coverage is 93%
@@ -38,7 +40,7 @@ Download the Phar file
 ./psp 
 ```
 
-Check out help
+2. Check out help
 ```bash
  ./bin/psp -h
 ```
