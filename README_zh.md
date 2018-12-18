@@ -1,5 +1,5 @@
 # php-lisp
-php-lisp  是一个用PHP写的lisp解释器
+php-lisp  是一个用PHP写的lisp解释器  (只是为了好玩儿)
 
 
 [![Build Status](https://travis-ci.org/php-lisp/php-lisp.svg?branch=master)](https://travis-ci.org/php-lisp/php-lisp)
