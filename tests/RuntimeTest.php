@@ -20,6 +20,7 @@ use InvalidArgumentException;
 use OutOfRangeException;
 use PhpLisp\Psp\ApplicableInterface;
 use PhpLisp\Psp\Environment;
+use PhpLisp\Psp\Exceptions\InvalidApplicationException;
 use PhpLisp\Psp\Literal;
 use PhpLisp\Psp\Parser;
 use PhpLisp\Psp\PspList;
@@ -172,6 +173,9 @@ class RuntimeTest extends TestCase
         $scope = new Scope;
         $retval = $macro->apply($scope, $args);
         $this->assertInstanceOf(UserMacro::class, $retval);
+
+        $this->expectException(InvalidApplicationException::class);
+        $retval = $macro->apply($scope, $args)->apply($scope, $args);
         $this->assertSame($scope, $retval->scope);
         $this->assertSame($args, $retval->body);
     }
@@ -264,6 +268,39 @@ class RuntimeTest extends TestCase
             $expected,
             call_user_func_array([$this, 'applyFunction'], $args)
         );
+    }
+
+    public function testApplyFunction()
+    {
+        $at = new At();
+        $this->assertFunction(1, $at, new PspList([1, 2, 3]), 0);
+        $this->assertFunction(3, $at, new PspList([1, 2, 3]), 2);
+
+
+        $args = [$at, new PspList([1, 2, 3]), 2];
+        array_shift($args);
+        $scope = new Scope;
+        $symbol = 0;
+        foreach ($args as &$value) {
+            if ($value instanceof \ArrayObject || is_array($value)) {
+                $value = new Quote(new PspList($value));
+            } elseif (is_object($value) || is_bool($value) || is_null($value)) {
+                $scope["tmp-$symbol"] = $value;
+                $value = Symbol::get('tmp-'.$symbol++);
+            } else {
+                $value = new Literal($value);
+            }
+        }
+        $at->apply($scope, new PspList($args));
+    }
+
+    public function testApplyFunctionException()
+    {
+        $at = new At();
+        $this->assertFunction(1, $at, new PspList([1, 2, 3]), 0);
+        $this->assertFunction(3, $at, new PspList([1, 2, 3]), 2);
+        $this->expectException(\OutOfRangeException::class);
+        $this->applyFunction($at, new PspList([1, 2, 3]), 3);
     }
 
     public function testFunction()

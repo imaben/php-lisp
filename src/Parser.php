@@ -121,7 +121,7 @@ final class Parser
         } elseif (preg_match(self::REAL_PATTERN, $form, $matches)) {
             $offset = strlen($matches[0]);
 
-            return new Literal((float) $matches[0]);
+            return new Literal((float)$matches[0]);
         } elseif (preg_match(self::INTEGER_PATTERN, $form, $matches)) {
             $offset = strlen($matches[0]);
             $sign = $matches[1] == '-' ? -1 : 1;
@@ -136,7 +136,7 @@ final class Parser
             return new Literal(
                 preg_replace_callback(
                     self::STRING_ESCAPE_PATTERN,
-                    [__CLASS__, '_unescapeString'],
+                    [__CLASS__, 'unEscapeString'],
                     substr($parsed, 1, -1)
                 )
             );
@@ -152,10 +152,15 @@ final class Parser
         throw new ParsingException($form, 0);
     }
 
-    protected static function _unescapeString($matches)
+    protected static function unEscapeString($matches)
     {
-        static $map = ['n' => "\n", 'r' => "\r", 't' => "\t", 'v' => "\v",
-            'f' => "\f"];
+        static $map = [
+            'n' => "\n",
+            'r' => "\r",
+            't' => "\t",
+            'v' => "\v",
+            'f' => "\f",
+        ];
         if (!empty($matches[2])) {
             return chr(octdec($matches[2]));
         } elseif (!empty($matches[3])) {
@@ -163,6 +168,7 @@ final class Parser
         } elseif (isset($map[$matches[1]])) {
             return $map[$matches[1]];
         }
+
         return $matches[1];
     }
 }
